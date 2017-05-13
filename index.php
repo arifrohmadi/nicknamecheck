@@ -13,61 +13,75 @@
     <![endif]-->
 </head>
 <body>
-<?php include 'header.php'; ?>
-<h2>NICKNAME CHECKER</h2>
-
-<form action="proses.php" method="post">
-Nickname: <label><input type="text" name="nickname" value="" class="form-control"></label>
-<input type="submit" name="submit" value="add"  class="btn btn-default">
-</form>
-
 <?php
+include 'header.php';
 include "koneksi.php";
-$disp = mysql_query("SELECT id, nickname FROM tb_nickname");
-$i=0;
+?>
+
+<h2>RepA [Repetitive Ayats]</h2>
+Urutan berdasar:
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<label><select name="pilih" class="form-control">
+  <option value="1">Bunyi</option>
+  <option value="2">Juz</option>
+  <option value="3">Nomor Surat</option>
+  <option value="4">Perulangan</option>
+</select></label>
+<input type="submit" class="btn btn-default" name="submit" value="Pilih">
+</form>
+<br/>
+
+<?php
+if(isset($_POST['submit'])){
+$pilih = $_POST['pilih'];
+
+if ($pilih=="1"){
+    $disp = mysql_query("SELECT s.surat, a.no_ayat, a.bunyi, a.transliterasi, a.arti,
+    a.repetisi, a.juz, s.jml_ayat, t.tempat, a.no_turun FROM ayat a
+    INNER JOIN surat s ON a.id_surat = s.id_surat
+    INNER JOIN tempat t ON a.id_tempat = t.id_tempat ORDER BY a.transliterasi");
+}
+elseif ($pilih=="2"){
+    $disp = mysql_query("SELECT s.surat, a.no_ayat, a.bunyi, a.transliterasi, a.arti,
+    a.repetisi, a.juz, s.jml_ayat, t.tempat, a.no_turun FROM ayat a
+    INNER JOIN surat s ON a.id_surat = s.id_surat
+    INNER JOIN tempat t ON a.id_tempat = t.id_tempat ORDER BY a.juz");
+}
+elseif ($pilih=="3"){
+    $disp = mysql_query("SELECT s.surat, a.no_ayat, a.bunyi, a.transliterasi, a.arti,
+    a.repetisi, a.juz, s.jml_ayat, t.tempat, a.no_turun FROM ayat a
+    INNER JOIN surat s ON a.id_surat = s.id_surat
+    INNER JOIN tempat t ON a.id_tempat = t.id_tempat ORDER BY a.id_surat");
+}
+else {
+    $disp = mysql_query("SELECT s.surat, a.no_ayat, a.bunyi, a.transliterasi, a.arti,
+    a.repetisi, a.juz, s.jml_ayat, t.tempat, a.no_turun FROM ayat a
+    INNER JOIN surat s ON a.id_surat = s.id_surat
+    INNER JOIN tempat t ON a.id_tempat = t.id_tempat");
+}
+?>
+
+<table class="table" border="1"><th>No</th><th>No Surat</th><th>No Surat & Ayat</th>
+  <th>Bunyi</th><th>Arti</th><th>Repetisi</th><th>Juz</th>
+  <th>Jumlah Ayat</th><th>Tempat Turun</th>
+<?php
+$i=1;
 while ($r=mysql_fetch_array($disp)){
-  $id[$i]=$r['id'];
-  $nickname[$i]=$r['nickname'];
-  $i++;
+echo "<tr><td>".$i."<td>".$r['surat']."<td>".$r['no_ayat']."</td><td>".
+  $r['bunyi']."<br/>".$r['transliterasi']."</td><td>".$r['arti']."</td><td>".
+  $r['repetisi']."</td><td>".$r['juz']."</td><td>".$r['jml_ayat']."</td><td>".
+  $r['tempat']."</td></tr>";
+$i++;
 }
-?>
-
-Nickname yang Sama di Database: <br/><br/>
-<table class="table-bordered">
-<tr><th>No</th><th>Nickname</th><th>Jumlah</th></tr>
-<?php
-//sorting nickname
-array_multisort($nickname,$id);
-for ($i=0; $i<sizeof($nickname); $i++){
-	$c=1;
-	for ($j=0; $j<sizeof($nickname); $j++){
-		if (strcasecmp($nickname[$i],$nickname[$j]) == 0)
-		{$count[$i]=$c;$c++;}
-	}
-	if ($count[$i]>1){
-  echo "<tr><td>".($id[$i])."</td><td>".$nickname[$i]."</td><td>".$count[$i]."</td></tr>";}
-}
-?>
-</table><br/>
-
-<b>LIST USER YANG TERSIMPAN DALAM DATABASE</b> </br></br>
-
-<table border="1" class="table">
-<tr><th>No</th><th>Nickname</th></tr>
-<?php
-//sorting id
-array_multisort($id,$nickname);
-for ($i=0; $i<sizeof($nickname); $i++){
-echo "<tr><td>".($i+1)."</td><td>".$nickname[$i]."</td></tr>";
 }
 ?>
 </table>
-
 
 <?php include 'footer.php';?>
 
 </body>
 </html>
+
 
 <!--
 creator: arifrohmadi

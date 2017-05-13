@@ -14,9 +14,11 @@
 </head>
 <body>
 <?php include 'header.php'; ?>
-Nickname Checker<br/>
-<b>creator:</b> arifrohmadi </br>
-template using simple sidebar (<a href="http://startbootstrap.com/template-overviews/simple-sidebar/" target="_blank">startbootstrap.com</a>)
+<b>(RepA) REPETITIVE AYATS</b><br/>
+<i>a program which can help us to look repetitive ayats in Al-Qur'an</i><br/><br/>
+<b>Creator:</b> @arifrohmadi </br>
+Grab data from Qsoft </br>
+Template using simple sidebar (<a href="http://startbootstrap.com/template-overviews/simple-sidebar/" target="_blank">startbootstrap.com</a>)
 
 <?php include 'footer.php';?>
 
